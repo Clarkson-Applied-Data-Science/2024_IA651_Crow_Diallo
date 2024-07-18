@@ -9,7 +9,7 @@
 ---
 
 ### <u>Problem Statement</u>
-The National Basketball Association (NBA) is the global premier men’s professional basketball league. While players traditionally have specific positions, the sport is evolving to be more positionless, with centers attempting more three-point shots and guards driving to the basket for dunks. Using this dataset, we will apply PCA techniques to identify players on a lower dimension and determine which players explain the most variance. We will also explore which features are most important for predicting a player's position.
+The National Basketball Association (NBA) is the global premier men’s professional basketball league. While players traditionally have specific positions, the sport is evolving to be more positionless, with centers attempting more three-point shots and guards driving to the basket for dunks. Using this dataset, we will apply PCA techniques to identify players on a lower dimension and determine which players explain the most variance. We will also explore which features are most important for predicting a player's position. The goal for this project is to predict the position of a player given different features.
 
 ### <u>Exploratory Data Analysis - EDA</u>
 
@@ -24,7 +24,7 @@ _Figure 2: Categorical Variable Distributions_
 
 ##### Feature Engineering:
 
-After conducting the Exploratory Data Analysis (EDA), we engineered a couple of features. First, we created Age Binned categories to allow us to see which age group explained the most variance and identify the groups that contained the top and worst performers. We also created another feature for performance, which utilized the average of offensive rating and defensive rating. This does a better job of understanding the underlying meaning of the data. After creating these features, we then dropped the original features.
+After conducting the Exploratory Data Analysis (EDA), we engineered a couple of features. First, we created Age Binned categories to allow us to see which age group explained the most variance and identify the groups that contained the top and worst performers. We also created another feature for average rating and average rebound, which utilized the average of offensive rating and defensive rating. This does a better job of understanding the underlying meaning of the data. After creating these features, we then dropped the original features.
 
 ##### Identification and removal of outlier:
 
