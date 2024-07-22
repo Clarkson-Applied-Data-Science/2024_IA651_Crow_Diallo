@@ -114,7 +114,7 @@ Next, we analyzed the distribution of categorical variables, presenting bar plot
 
 ### Feature Engineering:
 
-Feature engineering involved creating new features such as average rating and average rebound to capture the underlying data patterns more effectively. We applied label encoding to categorical variables to facilitate model training. Additionally, cross features were generated to improve model performance and capture complex interactions between features.
+Feature engineering involved creating new features such as average rating and average rebound to capture the underlying data patterns more effectively. Additionally, cross features were generated to improve model performance and capture complex interactions between features.
 
 ### Identification and removal of outlier:
 
