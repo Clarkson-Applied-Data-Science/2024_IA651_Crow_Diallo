@@ -2,7 +2,7 @@
 from sklearn.decomposition import PCA
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split, GridSearchCV, StratifiedKFold, KFold
+from sklearn.model_selection import train_test_split, GridSearchCV, StratifiedKFold, KFold, learning_curve
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
@@ -414,6 +414,33 @@ y_pred = svc_pipeline.predict(X_test)
 # Display the confusion matrix
 metrics.ConfusionMatrixDisplay.from_predictions(y_test, y_pred, normalize='true', values_format=".0%", xticks_rotation='vertical')
 print(metrics.classification_report(y_test, y_pred))
+
+# %%
+# Calculate learning curves
+train_sizes, train_scores, test_scores = learning_curve(svc_pipeline, X_train, y_train, cv=5, n_jobs=-1)
+
+# Calculate mean and standard deviation
+train_scores_mean = train_scores.mean(axis=1)
+test_scores_mean = test_scores.mean(axis=1)
+train_scores_std = train_scores.std(axis=1)
+test_scores_std = test_scores.std(axis=1)
+
+# Plot learning curves
+plt.figure()
+plt.title("Learning Curves (SVC)")
+plt.xlabel("Training examples")
+plt.ylabel("Score")
+plt.ylim(0, 1.1)
+plt.grid()
+
+plt.plot(train_sizes, train_scores_mean, 'o-', color="r", label="Training score")
+plt.plot(train_sizes, test_scores_mean, 'o-', color="g", label="Cross-validation score")
+
+plt.fill_between(train_sizes, train_scores_mean - train_scores_std, train_scores_mean + train_scores_std, alpha=0.2, color="r")
+plt.fill_between(train_sizes, test_scores_mean - test_scores_std, test_scores_mean + test_scores_std, alpha=0.2, color="g")
+
+plt.legend(loc="best")
+plt.show()
 
 # %% [markdown]
 # # Sample test sets
