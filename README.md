@@ -291,6 +291,7 @@ To assess classification performance, we analyzed confusion matrices and classif
 
 The classification report below details the performance metrics:
 
+_Table 5: Classification Report_
 |              | Precision | Recall | F1-Score | Support |
 | ------------ | --------- | ------ | -------- | ------- |
 | C            | 0.45      | 0.62   | 0.53     | 8       |
