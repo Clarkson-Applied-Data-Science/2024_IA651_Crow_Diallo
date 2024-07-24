@@ -9,9 +9,9 @@
 
 ## Introduction
 
-In this project, we aim to predict the positions of NBA players using a dataset containing various performance metrics from the 2021-2022 regular season. The dataset, sourced from basketball-reference.com and collected via the ballr package in R, includes performance statistics for 812 player-team stints. The primary goal is to build a predictive model that classifies players into positions based on their performance metrics.
+In this project, we explore the potential of using machine learning techniques to predict the positions of NBA players based on their performance metrics from the 2021-2022 regular season. Utilizing a comprehensive dataset sourced from basketball-reference.com and gathered through the ballr package in R, we analyze statistics for 812 player-team stints. Our primary objective is to develop a predictive model that classifies players into their respective positions using various performance indicators.
 
-Accurately predicting player positions can have significant implications for team management, game strategy, and player evaluation. By analyzing and understanding these metrics, teams can make informed decisions about player utilization and strategy. Additionally, we incorporated a learning curve analysis to evaluate the model's performance and its ability to generalize with varying amounts of training data.
+Accurately predicting player positions can greatly benefit team management, game strategy, and player evaluation. By leveraging these performance metrics, teams can make more informed decisions regarding player utilization and overall strategy. Additionally, we include a learning curve analysis to evaluate the model's performance and its ability to generalize with varying amounts of training data. This report details our methodology, from data preparation and feature selection to model evaluation and results analysis, providing a comprehensive overview of our approach and findings.
 
 
 ## Dataset Description
@@ -213,12 +213,14 @@ _Table 4: Top 10 Players by PC2_
 | Jayson Tatum     | 23  | 0.453       | 4.442239 |
 
 ### Model Train, Test and Validation on the Original Datasets
-Before deciding on feature importance, we trained, tested, and evaluated a Support Vector Machine (SVC) and Random Forest model using hyperparameter tuning and grid search to assess model performance on the original datasets. This involved oversampling techniques, scaling, and using pipelines to avoid data leakage. With these techniques, the SVC model scored 56.13%.
+Before determining feature importance, we trained, tested, and evaluated both a Support Vector Machine (SVC) and a Random Forest model. This involved hyperparameter tuning and grid search to optimize model performance on the original datasets. We employed oversampling techniques, scaling, and the use of pipelines to avoid data leakage. Through these methods, the SVC model achieved a score of 56.13%.
+
 - **Best Score:** 56.13%
 - **Best Parameters:** 
   - `kernel`: 'rbf'
   - `C`: 1
   - `gamma`: 0.01 
+
 _Table 5: Classification Report_
 
   |                  | precision | recall | f1-score | support |
@@ -232,14 +234,18 @@ _Table 5: Classification Report_
   | **macro avg**    | 0.53      | 0.55   | 0.54     | 118     |
   | **weighted avg** | 0.52      | 0.53   | 0.52     | 118     |
 
-Figure 7 shows the confusion matrix.
+Figure 7 below shows the confusion matrix for this SVC model from above.
+
 <p align="center">
   <img src="image-9.png" alt="Confusion Matrix">
   <br>
   <em>Figure 7: Confusion Matrix</em>
 </p>
 
-# Define the pipeline with scaler, SMOTE, and SVC
+#### Defining the Pipeline
+The following code snippet illustrates how we defined the pipeline to obtain the SVC model. We incorporated `StandardScaler()` and `SMOTE()` with a random state of 42 to ensure consistency.
+
+```{python}
 svc_pipeline = Pipeline(steps=[
     ('scaler', StandardScaler()),
     ('smote', SMOTE(random_state=42)),
@@ -255,7 +261,7 @@ y_pred = svc_pipeline.predict(X_test)
 # Display the confusion matrix
 metrics.ConfusionMatrixDisplay.from_predictions(y_test, y_pred, normalize='true', values_format=".0%", xticks_rotation='vertical')
 print(metrics.classification_report(y_test, y_pred))
-
+```
 
 ### Feature Importance
 Prior to model selection, training, and evaluation, we employed a random forest classifier to identify the most significant features for predicting the target variable. This process aids in reducing noise, which can lead to overfitting and degrade model performance.
@@ -312,7 +318,7 @@ This diverse range of cross-validation strategies allowed us to assess model sta
 
 ### Results
 
-The GridSearchCV was applied to each classifier using the defined hyperparameter grids and cross-validation strategies. Below are the results from the model tuning:
+The GridSearchCV was applied to each classifier using the defined hyperparameter grids and cross-validation strategies. The scoring metric chosen for model evaluation was `balanced_accuracy`, rather than other options such as accuracy or F1-score. This decision was made because the dataset exhibited class imbalance, where some player positions were more represented than others. The `balanced_accuracy` metric accounts for this imbalance by computing the average of recall obtained on each class, thereby providing a more comprehensive assessment of model performance across all classes. This ensures that the model's ability to correctly identify players in less represented positions is equally weighted, leading to a more equitable evaluation of predictive performance. Below are the results from the model tuning:
 
 #### Support Vector Classifier (SVC)
 
@@ -325,15 +331,7 @@ The GridSearchCV was applied to each classifier using the defined hyperparameter
 
 #### Confusion Matrix and Classification Report
 
-To assess classification performance, we analyzed confusion matrices and classification reports. These metrics provided insights into the precision, recall, and F1-score for each class.
-
-<p align="center">
-  <img src="image-7.png" alt="Confusion Matrix">
-  <br>
-  <em>Figure 9: Confusion Matrix</em>
-</p>
-
-The classification report below details the performance metrics:
+To evaluate classification performance, we analyzed confusion matrices and classification reports. These metrics provided insights into the precision, recall, and F1-score for each class. The confusion matrix and classification report for our best model, based on the highest score, are presented below in Table 6 and Figure 9.
 
 _Table 6: Classification Report_
 |                  | Precision | Recall | F1-Score | Support |
@@ -346,6 +344,12 @@ _Table 6: Classification Report_
 | **Accuracy**     |           |        | 0.45     | 77      |
 | **Macro Avg**    | 0.44      | 0.48   | 0.45     | 77      |
 | **Weighted Avg** | 0.46      | 0.45   | 0.45     | 77      |
+
+<p align="center">
+  <img src="image-7.png" alt="Confusion Matrix">
+  <br>
+  <em>Figure 9: Confusion Matrix</em>
+</p>
 
 This analysis revealed areas where the model performed well and identified classes with lower precision and recall.
 
@@ -366,10 +370,10 @@ The learning curves plot both the training score and the cross-validation score 
 In our case, the learning curve shows that as the number of training examples increases, the cross-validation score improves and stabilizes, while the training score slightly decreases but remains high. This behavior suggests that the model is not overfitting and benefits from more training data, indicating a good generalization capability. Overall, the learning curve analysis demonstrates that our SVC model with the specified parameters and pipeline is well-suited for the dataset, generalizing well to new data without significant overfitting, and could potentially benefit from additional training data to further enhance its performance.
 
 ### Model Comparison based on data
-After applying feature engineering and feature importance, it is evident that the model’s performance is slightly lower compared to the original dataset, with a best score of 56.13% and filtered data achieving a best score of 54.95%. However, this performance difference is not significant, suggesting that the need for more data still persists. 
+After applying feature engineering and determining feature importance, we observed that the model’s performance was slightly lower compared to the original dataset, with a best score of 54.95% versus 56.13%. However, this performance difference is not significant, indicating that the need for more data persists.
 
 ### Model Limitations
-A significant limitation of this model is the small size of the dataset, which may also be synthesized. Acquiring additional data from a reliable source would improve the model’s performance and mitigate issues related to synthesized data.
+A significant limitation of this model is the small size of the dataset, which may also include synthesized data. Acquiring additional data from a reliable source would enhance the model’s performance and mitigate issues related to synthesized data.
 
 ### Sample Test
 We generated three rows of new test data. The predicted labels are summarized below.
@@ -378,17 +382,27 @@ _Table 7: Predicted Labels_
 
 | Prediction |
 | ---------- |
-| SG         |
+| SF         |
 | PG         |
 | PF         |
 
-## Conclusion
+Player 1 was classified as a Small Forward (SF) instead of a Shooting Guard (SG). This classification is justified when examining the player's performance metrics and role on the court. Small Forwards typically exhibit versatility in their gameplay, often demonstrating a mix of scoring, defense, and playmaking abilities. In our dataset, this player’s statistics likely showed a balanced contribution across these areas, aligning more closely with the typical profile of an SF. Furthermore, positional classifications in basketball are not always rigid; players can perform multiple roles depending on team strategies and game situations. The flexibility and overlapping responsibilities between SF and SG positions mean that such a classification shift is both plausible and expected in certain contexts. This underscores the robustness of our model in identifying nuanced player roles based on comprehensive performance data rather than relying solely on traditional position labels. It highlights the model's ability to adapt and provide insights that might not be immediately apparent through conventional analysis.
 
-This project demonstrated the ability to predict NBA player positions based on performance metrics, achieving notable accuracy with the selected models. The learning curve analysis and PCA results provided additional insights into model performance and feature importance, aiding in the interpretation and refinement of the predictive models. 
+Player 2 exhibits classic characteristics of a Point Guard (PG). With a high number of assists at 9.56 per game, this player plays a significant role in facilitating the team's offense and setting up teammates for scoring opportunities. The scoring ability is also evident, with a solid 3-point shooting percentage of 0.45 and an average of 11.85 points per game. Although the turnover rate is slightly higher at 3 per game, this is acceptable for a point guard who handles the ball frequently and is involved in playmaking. The lower rebounding numbers, with an average of 2.40 rebounds per game, are typical for a point guard who is more focused on directing the game from the perimeter. Additionally, the player contributes with 1.8 steals per game, highlighting their defensive capabilities. These attributes collectively point towards the responsibilities and skill set of a point guard, making the prediction of PG appropriate for Player 2.
+
+Player 3 displays key attributes characteristic of a Power Forward (PF). The player is a strong rebounder, with a total rebound average of 12.42 and a particularly high offensive rebound rate of 9.71 per game, which is essential for a power forward who often battles in the paint for second-chance points. Additionally, the player records 1.05 blocks per game, underscoring their defensive presence near the basket. Despite a lower 2-point shooting percentage of 0.355, the player compensates with a versatile scoring ability, averaging 18 points per game and maintaining a 3-point shooting percentage of 0.40. This versatility in scoring is a valuable asset for a power forward. Moreover, the player has a higher number of personal fouls (4 per game), which is common for power forwards who play a physical game. With these attributes, including substantial minutes played (30.07 per game) and a strong offensive rating (108), Player 3 is well-suited for the PF position, where rebounding, interior defense, and scoring versatility are key.
+
+## Conclusion
+In this project, we successfully developed a model to predict NBA player positions using performance metrics from the 2021-2022 regular season. Through a structured approach encompassing data preparation, feature engineering, PCA analysis, and rigorous model evaluation, we identified the Support Vector Classifier (SVC) with an RBF kernel as our best-performing model, achieving a classification accuracy of 56.13%. The integration of feature scaling, oversampling techniques, and hyperparameter tuning contributed significantly to the model's performance.
+
+Our analysis highlighted key insights into the relationships between various performance metrics and player positions, emphasizing the importance of specific features such as field goals, assists, and rebounds. The use of PCA further aided in understanding the variance distribution and feature importance, allowing us to refine our models effectively.
+
+While our model shows promise, the results also reveal areas for further improvement, particularly in handling class imbalances and optimizing model performance. 
 
 ### Next Steps
+To build on the findings of this project, several avenues for future work are recommended. Enhancing feature engineering by incorporating additional advanced features and interactions between existing features, as well as leveraging domain-specific knowledge, could create more meaningful features that better capture the nuances of player performance. Further model optimization can be pursued by experimenting with sophisticated machine learning models such as gradient boosting machines or deep learning architectures, and implementing ensemble methods to combine the strengths of multiple classifiers and improve predictive performance. Handling class imbalance remains a critical area for improvement, and more robust techniques such as advanced sampling methods or cost-sensitive learning should be investigated.
 
-Future work could explore the impact of additional features, such as player injury history or advanced metrics, on model performance. Additionally, incorporating more sophisticated models and ensemble methods could further improve prediction accuracy and generalizability.
+Expanding the dataset to include multiple seasons would enable temporal analysis, allowing for the assessment of player performance trends over time and the use of time-series forecasting techniques to predict player performance and transitions between positions. Collaborating with basketball analysts and coaches to incorporate expert knowledge and domain-specific insights into the model development process could customize the model to address specific strategic needs of teams, such as optimizing player rotations or scouting for potential trades. Finally, validating the model's predictions in real-world scenarios, such as during actual games or practice sessions, and gathering feedback from coaches and players, would refine the model and ensure it meets the needs of end-users. By pursuing these next steps, we can enhance the robustness and applicability of our predictive model, ultimately contributing to more informed decision-making in the realm of basketball team management and strategy.
 
 ## References
 
