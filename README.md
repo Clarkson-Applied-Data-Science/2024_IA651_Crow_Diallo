@@ -212,6 +212,50 @@ _Table 4: Top 10 Players by PC2_
 | CJ McCollum      | 30  | 0.460       | 4.585659 |
 | Jayson Tatum     | 23  | 0.453       | 4.442239 |
 
+### Model Train, Test and Validation on the Original Datasets
+Before deciding on feature importance, we trained, tested, and evaluated a Support Vector Machine (SVC) and Random Forest model using hyperparameter tuning and grid search to assess model performance on the original datasets. This involved oversampling techniques, scaling, and using pipelines to avoid data leakage. With these techniques, the SVC model scored 56.13%.
+- **Best Score:** 56.13%
+- **Best Parameters:** 
+  - `kernel`: 'rbf'
+  - `C`: 1
+  - `gamma`: 0.01 
+_Table 5: Classification Report_
+
+  |                  | precision | recall | f1-score | support |
+  | ---------------- | --------- | ------ | -------- | ------- |
+  | C                | 0.62      | 0.83   | 0.71     | 12      |
+  | PF               | 0.53      | 0.45   | 0.49     | 20      |
+  | PG               | 0.63      | 0.59   | 0.61     | 29      |
+  | SF               | 0.40      | 0.38   | 0.39     | 26      |
+  | SG               | 0.48      | 0.52   | 0.50     | 31      |
+  | **accuracy**     |           |        | 0.53     | 118     |
+  | **macro avg**    | 0.53      | 0.55   | 0.54     | 118     |
+  | **weighted avg** | 0.52      | 0.53   | 0.52     | 118     |
+
+Figure 7 shows the confusion matrix.
+<p align="center">
+  <img src="image-9.png" alt="Confusion Matrix">
+  <br>
+  <em>Figure 7: Confusion Matrix</em>
+</p>
+
+# Define the pipeline with scaler, SMOTE, and SVC
+svc_pipeline = Pipeline(steps=[
+    ('scaler', StandardScaler()),
+    ('smote', SMOTE(random_state=42)),
+    ('svc', svc_model)
+])
+
+# Fit the pipeline with the training data
+svc_pipeline.fit(X_train, y_train)
+
+# Predict using the pipeline
+y_pred = svc_pipeline.predict(X_test)
+
+# Display the confusion matrix
+metrics.ConfusionMatrixDisplay.from_predictions(y_test, y_pred, normalize='true', values_format=".0%", xticks_rotation='vertical')
+print(metrics.classification_report(y_test, y_pred))
+
 
 ### Feature Importance
 Prior to model selection, training, and evaluation, we employed a random forest classifier to identify the most significant features for predicting the target variable. This process aids in reducing noise, which can lead to overfitting and degrade model performance.
@@ -219,7 +263,7 @@ Prior to model selection, training, and evaluation, we employed a random forest 
 <p align="center">
   <img src="image-6.png" alt="Feature Importance">
   <br>
-  <em>Figure 7: Feature Importance After Feature Engineering</em>
+  <em>Figure 8: Feature Importance After Feature Engineering</em>
 </p>
 
 ## Model Selection and Hyperparameter Tuning
@@ -286,22 +330,22 @@ To assess classification performance, we analyzed confusion matrices and classif
 <p align="center">
   <img src="image-7.png" alt="Confusion Matrix">
   <br>
-  <em>Figure 8: Confusion Matrix</em>
+  <em>Figure 9: Confusion Matrix</em>
 </p>
 
 The classification report below details the performance metrics:
 
-_Table 5: Classification Report_
-|              | Precision | Recall | F1-Score | Support |
-| ------------ | --------- | ------ | -------- | ------- |
-| C            | 0.45      | 0.62   | 0.53     | 8       |
-| PF           | 0.35      | 0.46   | 0.40     | 13      |
-| PG           | 0.53      | 0.62   | 0.57     | 13      |
-| SF           | 0.21      | 0.17   | 0.19     | 18      |
-| SG           | 0.65      | 0.52   | 0.58     | 25      |
-| **Accuracy** |           |        | 0.45     | 77      |
-| **Macro Avg**| 0.44      | 0.48   | 0.45     | 77      |
-| **Weighted Avg** | 0.46  | 0.45   | 0.45     | 77      |
+_Table 6: Classification Report_
+|                  | Precision | Recall | F1-Score | Support |
+| ---------------- | --------- | ------ | -------- | ------- |
+| C                | 0.45      | 0.62   | 0.53     | 8       |
+| PF               | 0.35      | 0.46   | 0.40     | 13      |
+| PG               | 0.53      | 0.62   | 0.57     | 13      |
+| SF               | 0.21      | 0.17   | 0.19     | 18      |
+| SG               | 0.65      | 0.52   | 0.58     | 25      |
+| **Accuracy**     |           |        | 0.45     | 77      |
+| **Macro Avg**    | 0.44      | 0.48   | 0.45     | 77      |
+| **Weighted Avg** | 0.46      | 0.45   | 0.45     | 77      |
 
 This analysis revealed areas where the model performed well and identified classes with lower precision and recall.
 
@@ -316,10 +360,13 @@ The learning curves plot both the training score and the cross-validation score 
 <p align="center">
   <img src="image-8.png" alt="Learning Curve">
   <br>
-  <em>Figure 9: Learning Curve</em>
+  <em>Figure 10: Learning Curve</em>
 </p>
 
 In our case, the learning curve shows that as the number of training examples increases, the cross-validation score improves and stabilizes, while the training score slightly decreases but remains high. This behavior suggests that the model is not overfitting and benefits from more training data, indicating a good generalization capability. Overall, the learning curve analysis demonstrates that our SVC model with the specified parameters and pipeline is well-suited for the dataset, generalizing well to new data without significant overfitting, and could potentially benefit from additional training data to further enhance its performance.
+
+### Model Comparison based on data
+After applying feature engineering and feature importance, it is evident that the model’s performance is slightly lower compared to the original dataset, with a best score of 56.13% and filtered data achieving a best score of 54.95%. However, this performance difference is not significant, suggesting that the need for more data still persists. 
 
 ### Model Limitations
 A significant limitation of this model is the small size of the dataset, which may also be synthesized. Acquiring additional data from a reliable source would improve the model’s performance and mitigate issues related to synthesized data.
@@ -327,13 +374,13 @@ A significant limitation of this model is the small size of the dataset, which m
 ### Sample Test
 We generated three rows of new test data. The predicted labels are summarized below.
 
-_Table 6: Predicted Labels_
+_Table 7: Predicted Labels_
 
-|Prediction|
-| --- |
-| SG  |
-| PG  |
-| PF  |
+| Prediction |
+| ---------- |
+| SG         |
+| PG         |
+| PF         |
 
 ## Conclusion
 
