@@ -358,7 +358,7 @@ We used the `learning_curve` function from `sklearn.model_selection` to generate
 The learning curves plot both the training score and the cross-validation score against the number of training examples. The red line represents the training score, which indicates the model's performance on the training data. A high training score suggests that the model fits the training data well. The green line represents the cross-validation score, which is crucial as it shows the model's ability to generalize to new, unseen data. A large gap between the training and cross-validation scores would suggest overfitting, meaning the model performs well on the training data but poorly on the test data. Conversely, a small gap suggests good generalization. 
 
 <p align="center">
-  <img src="image-8.png" alt="Learning Curve">
+  <img src="image-10.png" alt="Learning Curve">
   <br>
   <em>Figure 10: Learning Curve</em>
 </p>

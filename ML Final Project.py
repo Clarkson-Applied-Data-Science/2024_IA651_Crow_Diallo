@@ -524,13 +524,13 @@ test_scores_std = test_scores.std(axis=1)
 # Plot learning curves
 plt.figure()
 plt.title("Learning Curves (SVC)")
-plt.xlabel("Training examples")
+plt.xlabel("Train Size")
 plt.ylabel("Score")
 plt.ylim(0, 1.1)
 plt.grid()
 
 plt.plot(train_sizes[1:], train_scores_mean[1:], 'o-', color="r", label="Training score")
-plt.plot(train_sizes[1:], test_scores_mean[1:], 'o-', color="g", label="Cross-validation score")
+plt.plot(train_sizes[1:], test_scores_mean[1:], 'o-', color="g", label="Testing score")
 
 plt.fill_between(train_sizes, train_scores_mean - train_scores_std, train_scores_mean + train_scores_std, alpha=0.2, color="r")
 plt.fill_between(train_sizes, test_scores_mean - test_scores_std, test_scores_mean + test_scores_std, alpha=0.2, color="g")
