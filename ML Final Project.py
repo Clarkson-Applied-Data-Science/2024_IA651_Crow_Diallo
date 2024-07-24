@@ -247,6 +247,102 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
+# ## Model Training Test and Validation with Original Dataset
+
+# %%
+X = data.drop(columns = ['Position', 'Player'])
+y = data['Position']
+
+# Split the data before any preprocessing
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=42)
+
+# Create pipelines for each classifier to eliminate data leakage 
+svc_pipeline = Pipeline(steps=[
+    ('scaler', StandardScaler()),
+    ('smote', SMOTE(random_state=42)),
+    ('svc', SVC(class_weight='balanced', random_state=42))
+])
+
+rf_pipeline = Pipeline(steps=[
+    ('scaler', StandardScaler()),
+    ('smote', SMOTE(random_state=42)),
+    ('rf', RandomForestClassifier(class_weight='balanced', random_state=42))
+])
+
+
+# Define classifiers
+classifiers = {
+    'SVC': svc_pipeline,
+    'RandomForestClassifier': rf_pipeline
+}
+
+# Define hyperparameters
+params = {
+    'SVC': {
+        'svc__kernel': ['linear', 'poly', 'rbf', 'sigmoid'],
+        'svc__degree': [1, 2, 3, 4],
+        'svc__C': [1, 10, 100, 200, 300],
+        'svc__gamma': [0.1, 0.01, 0.001, 1]
+    },
+    'RandomForestClassifier': {
+        'rf__n_estimators': [1, 10, 100, 200, 500, 600],
+        'rf__max_depth': [10, 50, 100, 200, 400, 500],
+        'rf__bootstrap': [True],
+        'rf__max_features': ['sqrt', 'log2'],
+        'rf__criterion': ['gini', 'entropy']
+    }
+}
+# Define different KFold strategies
+kfold_strategies = {
+    'StratifiedKFold_3': StratifiedKFold(n_splits=3),
+    'StratifiedKFold_5': StratifiedKFold(n_splits=5),
+    'StratifiedKFold_10': StratifiedKFold(n_splits=10),
+    'KFold_3': KFold(n_splits=3, shuffle=True, random_state=42),
+    'KFold_5': KFold(n_splits=5, shuffle=True, random_state=42)
+}
+
+# Perform cross-validation and grid search
+for kfold_name, kfold_strategy in kfold_strategies.items():
+    print(f'Using KFold strategy: {kfold_name}')
+
+    for name, clf in classifiers.items():
+        print(f'Classifier: {name}')
+        grid_best_model = GridSearchCV(estimator=clf, param_grid=params[name], scoring='accuracy', n_jobs=1, 
+                                        cv=kfold_strategy, verbose=1)
+
+        grid_best_model.fit(X_train, y_train)
+
+        y_pred = grid_best_model.predict(X_test)
+
+        print(f'Best Score: {grid_best_model.best_score_}')
+        print(f'Best Parameters: {grid_best_model.best_params_}')
+
+        metrics.ConfusionMatrixDisplay.from_predictions(y_test, y_pred, normalize='true', values_format=".0%", xticks_rotation='vertical')
+        print(metrics.classification_report(y_test, y_pred))
+        print('-' * 75)
+
+# %%
+# Define the SVC model with specified parameters
+svc_model = SVC(C=1, degree=1, gamma=0.01, kernel='rbf', class_weight='balanced', random_state=42)
+
+# Define the pipeline with scaler, SMOTE, and SVC
+svc_pipeline = Pipeline(steps=[
+    ('scaler', StandardScaler()),
+    ('smote', SMOTE(random_state=42)),
+    ('svc', svc_model)
+])
+
+# Fit the pipeline with the training data
+svc_pipeline.fit(X_train, y_train)
+
+# Predict using the pipeline
+y_pred = svc_pipeline.predict(X_test)
+
+# Display the confusion matrix
+metrics.ConfusionMatrixDisplay.from_predictions(y_test, y_pred, normalize='true', values_format=".0%", xticks_rotation='vertical')
+print(metrics.classification_report(y_test, y_pred))
+
+# %% [markdown]
 # # More Feature Engineering
 
 # %%
@@ -433,8 +529,8 @@ plt.ylabel("Score")
 plt.ylim(0, 1.1)
 plt.grid()
 
-plt.plot(train_sizes, train_scores_mean, 'o-', color="r", label="Training score")
-plt.plot(train_sizes, test_scores_mean, 'o-', color="g", label="Cross-validation score")
+plt.plot(train_sizes[1:], train_scores_mean[1:], 'o-', color="r", label="Training score")
+plt.plot(train_sizes[1:], test_scores_mean[1:], 'o-', color="g", label="Cross-validation score")
 
 plt.fill_between(train_sizes, train_scores_mean - train_scores_std, train_scores_mean + train_scores_std, alpha=0.2, color="r")
 plt.fill_between(train_sizes, test_scores_mean - test_scores_std, test_scores_mean + test_scores_std, alpha=0.2, color="g")
