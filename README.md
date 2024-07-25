@@ -9,9 +9,9 @@
 
 ## Introduction
 
-In this project, we explore the potential of using machine learning techniques to predict the positions of NBA players based on their performance metrics from the 2021-2022 regular season. Utilizing a comprehensive dataset sourced from basketball-reference.com and gathered through the ballr package in R, we analyze statistics for 812 player-team stints. Our primary objective is to develop a predictive model that classifies players into their respective positions using various performance indicators.
+In this project, we investigate the application of machine learning techniques to predict NBA player positions based on performance metrics from the 2021-2022 regular season. We utilize a detailed dataset from basketball-reference.com, collected via the ballr package in R, encompassing statistics for 812 player-team stints. Our goal is to develop a predictive model that accurately classifies players into their respective positions based on various performance indicators.
 
-Accurately predicting player positions can greatly benefit team management, game strategy, and player evaluation. By leveraging these performance metrics, teams can make more informed decisions regarding player utilization and overall strategy. Additionally, we include a learning curve analysis to evaluate the model's performance and its ability to generalize with varying amounts of training data. This report details our methodology, from data preparation and feature selection to model evaluation and results analysis, providing a comprehensive overview of our approach and findings.
+Accurate prediction of player positions offers significant advantages for team management, game strategy, and player assessment. By analyzing these performance metrics, teams can make more strategic decisions regarding player deployment and overall game strategy. Additionally, we conduct a learning curve analysis to assess the model's performance and its capacity to generalize with varying amounts of training data. This report outlines our methodology, including data preparation, feature selection, and model evaluation, and provides a comprehensive overview of our approach and findings.
 
 
 ## Dataset Description
@@ -132,87 +132,12 @@ We utilized the interquartile range method to identify and eliminate outliers af
   <em>Figure 4: Boxplot with Outliers Removed</em>
 </p>
 
-## Principal Component Analysis (PCA)
+### Principal Component Analysis
 
-To further analyze the dataset, we applied PCA to examine the distribution of variance across components. We used the explained variance ratio from PCA to generate a clear plot for visualization.
+We conducted a Principal Component Analysis (PCA) as part of our model evaluation process. However, the results did not significantly contribute to the enhancement of the model's performance or interpretability.
 
-<p align="center">
-  <img src="image-4.png" alt="Cree Plot">
-  <br>
-  <em>Figure 5: PCA Cree Plot</em>
-</p>
+## Model Training, Testing, and Validation on the Original Datasets
 
-We also created a biplot for the first two principal components to identify the features that most significantly contribute to each component.
-
-<p align="center">
-  <img src="image-5.png" alt="Biplot PC1 & PC2">
-  <br>
-  <em>Figure 6: Biplot of PC1 & PC2</em>
-</p>
-
-Combining PCA loadings with filtered data, we generated a DataFrame to highlight top performers based on their principal component scores.
-
-_Table 1: Top Features by Performance Using PC1_
-
-| Features        | Top Performers | Bottom Performers |
-| --------------- | -------------- | ----------------- |
-| Age             | 25.733333      | 25.800000         |
-| N_Games         | 67.333333      | 24.933333         |
-| Game_Started    | 52.266667      | 2.866667          |
-| Minute_played   | 1985.000000    | 295.933333        |
-| Field_goal      | 10.913333      | 4.366667          |
-| Goal_attempt    | 20.833333      | 13.220000         |
-| Field_goal%     | 0.536133       | 0.337000          |
-| 3points_scored  | 1.693333       | 2.426667          |
-| 3points_Assists | 4.733333       | 8.126667          |
-| 3points%        | 0.331067       | 0.296133          |
-
-_Table 2: Top 10 Players by PC1_
-
-| Player              | Age | Field_goal% | PC1      |
-| ------------------- | --- | ----------- | -------- |
-| Jonas ValanÄiÅ«nas | 29  | 0.544       | 8.318119 |
-| Karl-Anthony Towns  | 26  | 0.529       | 8.273607 |
-| Deandre Ayton       | 23  | 0.634       | 8.020961 |
-| Domantas Sabonis    | 25  | 0.573       | 7.571184 |
-| Montrezl Harrell    | 28  | 0.645       | 7.422051 |
-| Brandon Clarke      | 25  | 0.644       | 6.852951 |
-| Jayson Tatum        | 23  | 0.453       | 6.584736 |
-| Pascal Siakam       | 27  | 0.494       | 6.379467 |
-| Julius Randle       | 27  | 0.411       | 5.614400 |
-| Christian Wood      | 26  | 0.501       | 5.580332 |
-
-_Table 3: Top Features by Performance Using PC2_
-
-| Features        | Top Performers | Bottom Performers |
-| --------------- | -------------- | ----------------- |
-| Age             | 26.533333      | 25.200000         |
-| N_Games         | 59.866667      | 42.133333         |
-| Game_Started    | 52.666667      | 14.000000         |
-| Minute_played   | 2028.000000    | 741.866667        |
-| Field_goal      | 11.313333      | 6.733333          |
-| Goal_attempt    | 25.526667      | 13.253333         |
-| Field_goal%     | 0.442067       | 0.506867          |
-| 3points_scored  | 4.080000       | 0.860000          |
-| 3points_Assists | 11.100000      | 2.660000          |
-| 3points%        | 0.362867       | 0.299067          |
-
-_Table 4: Top 10 Players by PC2_
-
-| Player           | Age | Field_goal% | PC2      |
-| ---------------- | --- | ----------- | -------- |
-| Stephen Curry    | 33  | 0.437       | 6.204114 |
-| Damian Lillard   | 31  | 0.402       | 5.709959 |
-| Devin Booker     | 25  | 0.466       | 5.432972 |
-| Zach LaVine      | 26  | 0.476       | 5.354128 |
-| Anfernee Simons  | 22  | 0.443       | 4.889255 |
-| Kyrie Irving     | 29  | 0.469       | 4.831964 |
-| D'Angelo Russell | 25  | 0.411       | 4.753890 |
-| Reggie Jackson   | 31  | 0.392       | 4.607646 |
-| CJ McCollum      | 30  | 0.460       | 4.585659 |
-| Jayson Tatum     | 23  | 0.453       | 4.442239 |
-
-### Model Train, Test and Validation on the Original Datasets
 Before determining feature importance, we trained, tested, and evaluated both a Support Vector Machine (SVC) and a Random Forest model. This involved hyperparameter tuning and grid search to optimize model performance on the original datasets. We employed oversampling techniques, scaling, and the use of pipelines to avoid data leakage. Through these methods, the SVC model achieved a score of 56.13%.
 
 - **Best Score:** 56.13%
@@ -393,11 +318,11 @@ Player 2 exhibits classic characteristics of a Point Guard (PG). With a high num
 Player 3 displays key attributes characteristic of a Power Forward (PF). The player is a strong rebounder, with a total rebound average of 12.42 and a particularly high offensive rebound rate of 9.71 per game, which is essential for a power forward who often battles in the paint for second-chance points. Additionally, the player records 1.05 blocks per game, underscoring their defensive presence near the basket. Despite a lower 2-point shooting percentage of 0.355, the player compensates with a versatile scoring ability, averaging 18 points per game and maintaining a 3-point shooting percentage of 0.40. This versatility in scoring is a valuable asset for a power forward. Moreover, the player has a higher number of personal fouls (4 per game), which is common for power forwards who play a physical game. With these attributes, including substantial minutes played (30.07 per game) and a strong offensive rating (108), Player 3 is well-suited for the PF position, where rebounding, interior defense, and scoring versatility are key.
 
 ## Conclusion
-In this project, we successfully developed a model to predict NBA player positions using performance metrics from the 2021-2022 regular season. Through a structured approach encompassing data preparation, feature engineering, PCA analysis, and rigorous model evaluation, we identified the Support Vector Classifier (SVC) with an RBF kernel as our best-performing model, achieving a classification accuracy of 56.13%. The integration of feature scaling, oversampling techniques, and hyperparameter tuning contributed significantly to the model's performance.
+In this project, we successfully developed a model to predict NBA player positions using performance metrics from the 2021-2022 regular season. Through a structured approach encompassing data preparation, feature engineering, and rigorous model evaluation, we identified the Support Vector Classifier (SVC) with an RBF kernel as our best-performing model, achieving a classification accuracy of 56.13%. The integration of feature scaling, oversampling techniques, and hyperparameter tuning contributed significantly to the model's performance.
 
-Our analysis highlighted key insights into the relationships between various performance metrics and player positions, emphasizing the importance of specific features such as field goals, assists, and rebounds. The use of PCA further aided in understanding the variance distribution and feature importance, allowing us to refine our models effectively.
+Our analysis highlighted key insights into the relationships between various performance metrics and player positions, emphasizing the importance of specific features such as field goals, assists, and rebounds. The use of these features provided valuable information for refining our model and improving predictive accuracy.
 
-While our model shows promise, the results also reveal areas for further improvement, particularly in handling class imbalances and optimizing model performance. 
+While our model shows promise, the results also reveal areas for further improvement, particularly in handling class imbalances and optimizing overall model performance.
 
 ### Next Steps
 To build on the findings of this project, several avenues for future work are recommended. Enhancing feature engineering by incorporating additional advanced features and interactions between existing features, as well as leveraging domain-specific knowledge, could create more meaningful features that better capture the nuances of player performance. Further model optimization can be pursued by experimenting with sophisticated machine learning models such as gradient boosting machines or deep learning architectures, and implementing ensemble methods to combine the strengths of multiple classifiers and improve predictive performance. Handling class imbalance remains a critical area for improvement, and more robust techniques such as advanced sampling methods or cost-sensitive learning should be investigated.
