@@ -252,14 +252,14 @@ To evaluate classification performance, we analyzed confusion matrices and class
 _Table 6: Classification Report_
 |                  | Precision | Recall | F1-Score | Support |
 | ---------------- | --------- | ------ | -------- | ------- |
-| C                | 0.45      | 0.62   | 0.53     | 8       |
-| PF               | 0.35      | 0.46   | 0.40     | 13      |
-| PG               | 0.53      | 0.62   | 0.57     | 13      |
-| SF               | 0.21      | 0.17   | 0.19     | 18      |
-| SG               | 0.65      | 0.52   | 0.58     | 25      |
-| **Accuracy**     |           |        | 0.45     | 77      |
-| **Macro Avg**    | 0.44      | 0.48   | 0.45     | 77      |
-| **Weighted Avg** | 0.46      | 0.45   | 0.45     | 77      |
+| C                | 0.30      | 0.75   | 0.43     | 8       |
+| PF               | 0.33      | 0.23   | 0.27     | 13      |
+| PG               | 0.65      | 0.85   | 0.73     | 13      |
+| SF               | 0.18      | 0.11   | 0.14     | 18      |
+| SG               | 0.55      | 0.44   | 0.49     | 25      |
+| **Accuracy**     |           |        | 0.43     | 77      |
+| **Macro Avg**    | 0.40      | 0.48   | 0.41     | 77      |
+| **Weighted Avg** | 0.42      | 0.43   | 0.41     | 77      |
 
 <p align="center">
   <img src="image-7.png" alt="Confusion Matrix">
@@ -296,17 +296,17 @@ We generated three rows of new test data. The predicted labels are summarized be
 
 _Table 7: Predicted Labels_
 
-| Actual | Prediction |
-| ------ | ---------- |
-| C      | C          |
-| PF     | SG         |
-| SG     | SG         |
+|  Actual  |  Prediction  |
+|:--------:|:------------:|
+|    C     |      C       |
+|    PF    |      SG      |
+|    SG    |      SG      |
 
-Player 1 was classified as a Center (C) instead of a Shooting Guard (SG). This classification is justified when examining the player's performance metrics and role on the court. Small Forwards typically exhibit versatility in their gameplay, often demonstrating a mix of scoring, defense, and playmaking abilities. In our dataset, this player’s statistics likely showed a balanced contribution across these areas, aligning more closely with the typical profile of an SF. Furthermore, positional classifications in basketball are not always rigid; players can perform multiple roles depending on team strategies and game situations. The flexibility and overlapping responsibilities between SF and SG positions mean that such a classification shift is both plausible and expected in certain contexts. This underscores the robustness of our model in identifying nuanced player roles based on comprehensive performance data rather than relying solely on traditional position labels. It highlights the model's ability to adapt and provide insights that might not be immediately apparent through conventional analysis.
+The first player has exceptionally high total rebounds (19.7), defensive rebounds (9.5), and blocks (9.2). These are key attributes of a Center (C) who typically excels in defense, rebounding, and blocking shots. The high field goal percentage (0.959) further supports this position, as Centers often take high-percentage shots close to the basket. The model correctly identifies the player as a Center.
 
-Player 2 exhibits classic characteristics of a Point Guard (PG). With a high number of assists at 9.56 per game, this player plays a significant role in facilitating the team's offense and setting up teammates for scoring opportunities. The scoring ability is also evident, with a solid 3-point shooting percentage of 0.45 and an average of 11.85 points per game. Although the turnover rate is slightly higher at 3 per game, this is acceptable for a point guard who handles the ball frequently and is involved in playmaking. The lower rebounding numbers, with an average of 2.40 rebounds per game, are typical for a point guard who is more focused on directing the game from the perimeter. Additionally, the player contributes with 1.8 steals per game, highlighting their defensive capabilities. These attributes collectively point towards the responsibilities and skill set of a point guard, making the prediction of PG appropriate for Player 2.
+The second player’s metrics show relatively low rebounds (total and defensive) and a low field goal percentage (0.12), which are unusual for a Power Forward (PF), who generally contributes more to rebounding and scoring efficiently. The high turnover rate (9.1) and personal fouls (9.0) are also atypical. However, the high offensive rebounds (4.4) might indicate a more active role in offense, which can sometimes align with a Shooting Guard’s (SG) responsibilities. Although the model predicts SG, which seems unusual for traditional metrics of a Power Forward, this might indicate the player has attributes more aligned with a guard’s role in the dataset.
 
-Player 3 displays key attributes characteristic of a Power Forward (PF). The player is a strong rebounder, with a total rebound average of 12.42 and a particularly high offensive rebound rate of 9.71 per game, which is essential for a power forward who often battles in the paint for second-chance points. Additionally, the player records 1.05 blocks per game, underscoring their defensive presence near the basket. Despite a lower 2-point shooting percentage of 0.355, the player compensates with a versatile scoring ability, averaging 18 points per game and maintaining a 3-point shooting percentage of 0.40. This versatility in scoring is a valuable asset for a power forward. Moreover, the player has a higher number of personal fouls (4 per game), which is common for power forwards who play a physical game. With these attributes, including substantial minutes played (30.07 per game) and a strong offensive rating (108), Player 3 is well-suited for the PF position, where rebounding, interior defense, and scoring versatility are key.
+The third player has moderate assists (5.9), total rebounds (6.0), and a relatively low field goal percentage (0.02), which is common for a Shooting Guard (SG) who might take more perimeter shots and have varied shooting efficiency. The model accurately identifies the player as an SG, indicating it correctly captures the player's role based on these attributes.
 
 ## Conclusion
 In this project, we successfully developed a model to predict NBA player positions using performance metrics from the 2021-2022 regular season. Through a structured approach encompassing data preparation, feature engineering, and rigorous model evaluation, we identified the Support Vector Classifier (SVC) with an RBF kernel as our best-performing model, achieving a classification accuracy of 56.13%. The integration of feature scaling, oversampling techniques, and hyperparameter tuning contributed significantly to the model's performance.
