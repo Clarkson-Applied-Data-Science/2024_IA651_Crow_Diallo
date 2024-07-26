@@ -138,9 +138,10 @@ We conducted a Principal Component Analysis (PCA) as part of our model evaluatio
 
 ## Model Training, Testing, and Validation on the Original Datasets
 
-Before determining feature importance, we trained, tested, and evaluated both a Support Vector Machine (SVC) and a Random Forest model. This involved hyperparameter tuning and grid search to optimize model performance on the original datasets. We employed oversampling techniques, scaling, and the use of pipelines to avoid data leakage. Through these methods, the SVC model achieved a score of 56.13%.
+Before determining feature importance, we trained, tested, and evaluated both a Support Vector Machine (SVC) and a Random Forest model. This involved hyperparameter tuning and grid search to optimize model performance on the original datasets. We employed oversampling techniques, scaling, and the use of pipelines to avoid data leakage. Through these methods, the SVC model achieved a score of 56.28%.
 
-- **Best Score:** 56.13%
+- **StratifiedKfold: n_split** 10
+- **Best Score:** 56.28%
 - **Best Parameters:** 
   - `kernel`: 'rbf'
   - `C`: 1
@@ -174,18 +175,8 @@ The following code snippet illustrates how we defined the pipeline to obtain the
 svc_pipeline = Pipeline(steps=[
     ('scaler', StandardScaler()),
     ('smote', SMOTE(random_state=42)),
-    ('svc', svc_model)
+    ('svc', SVC(class_weight='balanced', random_state=42))
 ])
-
-# Fit the pipeline with the training data
-svc_pipeline.fit(X_train, y_train)
-
-# Predict using the pipeline
-y_pred = svc_pipeline.predict(X_test)
-
-# Display the confusion matrix
-metrics.ConfusionMatrixDisplay.from_predictions(y_test, y_pred, normalize='true', values_format=".0%", xticks_rotation='vertical')
-print(metrics.classification_report(y_test, y_pred))
 ```
 
 ### Feature Importance
@@ -246,12 +237,12 @@ This diverse range of cross-validation strategies allowed us to assess model sta
 The GridSearchCV was applied to each classifier using the defined hyperparameter grids and cross-validation strategies. The scoring metric chosen for model evaluation was `balanced_accuracy`, rather than other options such as accuracy or F1-score. This decision was made because the dataset exhibited class imbalance, where some player positions were more represented than others. The `balanced_accuracy` metric accounts for this imbalance by computing the average of recall obtained on each class, thereby providing a more comprehensive assessment of model performance across all classes. This ensures that the model's ability to correctly identify players in less represented positions is equally weighted, leading to a more equitable evaluation of predictive performance. Below are the results from the model tuning:
 
 #### Support Vector Classifier (SVC)
-
-- **Best Score:** 54.95%
+- **StratifiedKfold: n_split** 3
+- **Best Score:** 56.85%
 - **Best Parameters:** 
-  - `kernel`: 'rbf'
-  - `C`: 10
-  - `gamma`: 0.001
+  - `kernel`: 'sigmoid'
+  - `C`: 1
+  - `gamma`: 0.1
 
 
 #### Confusion Matrix and Classification Report
@@ -305,13 +296,13 @@ We generated three rows of new test data. The predicted labels are summarized be
 
 _Table 7: Predicted Labels_
 
-| Prediction |
-| ---------- |
-| SF         |
-| PG         |
-| PF         |
+| Actual | Prediction |
+| ------ | ---------- |
+| C      | C          |
+| PF     | SG         |
+| SG     | SG         |
 
-Player 1 was classified as a Small Forward (SF) instead of a Shooting Guard (SG). This classification is justified when examining the player's performance metrics and role on the court. Small Forwards typically exhibit versatility in their gameplay, often demonstrating a mix of scoring, defense, and playmaking abilities. In our dataset, this player’s statistics likely showed a balanced contribution across these areas, aligning more closely with the typical profile of an SF. Furthermore, positional classifications in basketball are not always rigid; players can perform multiple roles depending on team strategies and game situations. The flexibility and overlapping responsibilities between SF and SG positions mean that such a classification shift is both plausible and expected in certain contexts. This underscores the robustness of our model in identifying nuanced player roles based on comprehensive performance data rather than relying solely on traditional position labels. It highlights the model's ability to adapt and provide insights that might not be immediately apparent through conventional analysis.
+Player 1 was classified as a Center (C) instead of a Shooting Guard (SG). This classification is justified when examining the player's performance metrics and role on the court. Small Forwards typically exhibit versatility in their gameplay, often demonstrating a mix of scoring, defense, and playmaking abilities. In our dataset, this player’s statistics likely showed a balanced contribution across these areas, aligning more closely with the typical profile of an SF. Furthermore, positional classifications in basketball are not always rigid; players can perform multiple roles depending on team strategies and game situations. The flexibility and overlapping responsibilities between SF and SG positions mean that such a classification shift is both plausible and expected in certain contexts. This underscores the robustness of our model in identifying nuanced player roles based on comprehensive performance data rather than relying solely on traditional position labels. It highlights the model's ability to adapt and provide insights that might not be immediately apparent through conventional analysis.
 
 Player 2 exhibits classic characteristics of a Point Guard (PG). With a high number of assists at 9.56 per game, this player plays a significant role in facilitating the team's offense and setting up teammates for scoring opportunities. The scoring ability is also evident, with a solid 3-point shooting percentage of 0.45 and an average of 11.85 points per game. Although the turnover rate is slightly higher at 3 per game, this is acceptable for a point guard who handles the ball frequently and is involved in playmaking. The lower rebounding numbers, with an average of 2.40 rebounds per game, are typical for a point guard who is more focused on directing the game from the perimeter. Additionally, the player contributes with 1.8 steals per game, highlighting their defensive capabilities. These attributes collectively point towards the responsibilities and skill set of a point guard, making the prediction of PG appropriate for Player 2.
 
