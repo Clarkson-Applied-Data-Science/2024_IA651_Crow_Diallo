@@ -286,7 +286,7 @@ The learning curves plot both the training score and the cross-validation score 
 In our case, the learning curve shows that as the number of training examples increases, the cross-validation score improves and stabilizes, while the training score slightly decreases but remains high. This behavior suggests that the model is not overfitting and benefits from more training data, indicating a good generalization capability. Overall, the learning curve analysis demonstrates that our SVC model with the specified parameters and pipeline is well-suited for the dataset, generalizing well to new data without significant overfitting, and could potentially benefit from additional training data to further enhance its performance.
 
 ### Model Comparison based on data
-After applying feature engineering and determining feature importance, we observed that the model’s performance was slightly lower compared to the original dataset, with a best score of 54.95% versus 56.13%. However, this performance difference is not significant, indicating that the need for more data persists.
+After applying feature engineering and determining feature importance, we observed that the model’s performance was slightly higher compared to the original dataset, with a best score of 56.85% versus 56.28%. However, this performance difference is not significant, indicating that the need for more data persists.
 
 ### Model Limitations
 A significant limitation of this model is the small size of the dataset, which may also include synthesized data. Acquiring additional data from a reliable source would enhance the model’s performance and mitigate issues related to synthesized data.
@@ -309,7 +309,7 @@ The second player’s metrics show relatively low rebounds (total and defensive)
 The third player has moderate assists (5.9), total rebounds (6.0), and a relatively low field goal percentage (0.02), which is common for a Shooting Guard (SG) who might take more perimeter shots and have varied shooting efficiency. The model accurately identifies the player as an SG, indicating it correctly captures the player's role based on these attributes.
 
 ## Conclusion
-In this project, we successfully developed a model to predict NBA player positions using performance metrics from the 2021-2022 regular season. Through a structured approach encompassing data preparation, feature engineering, and rigorous model evaluation, we identified the Support Vector Classifier (SVC) with an RBF kernel as our best-performing model, achieving a classification accuracy of 56.13%. The integration of feature scaling, oversampling techniques, and hyperparameter tuning contributed significantly to the model's performance.
+In this project, we successfully developed a model to predict NBA player positions using performance metrics from the 2021-2022 regular season. Through a structured approach encompassing data preparation, feature engineering, and rigorous model evaluation, we identified the Support Vector Classifier (SVC) with an RBF kernel as our best-performing model, achieving a classification accuracy of 56.85%. The integration of feature scaling, oversampling techniques, and hyperparameter tuning contributed significantly to the model's performance.
 
 Our analysis highlighted key insights into the relationships between various performance metrics and player positions, emphasizing the importance of specific features such as field goals, assists, and rebounds. The use of these features provided valuable information for refining our model and improving predictive accuracy.
 
